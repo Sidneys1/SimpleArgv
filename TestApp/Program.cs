@@ -3,42 +3,41 @@ using SimpleArgv;
 
 namespace TestApp {
 	class Program {
-		static void Main(string[] args) {
-			var s = new CommandLine(new[] { "--", "-" });
+		static void Main(string[] argv) {
+			var commandLine = new CommandLine(new[] { "--", "-" });
 
-			s.AddArgument(strings => string.Join("', '", strings), string.Empty);
+			commandLine.AddArgument(args => string.Join("', '", args), string.Empty);
 
-			s.AddArgument(strings =>
+			commandLine.AddArgument(args =>
 			{
-				if (strings.Length > 1)
-					throw new ArgumentException($"only one value accepted (got {strings.Length})");
-				if (strings.Length == 0)
+				if (args.Length > 1)
+					throw new ArgumentException($"only one value accepted (got {args.Length})");
+				if (args.Length == 0)
 					return 1;
 				int o;
-				if (!int.TryParse(strings[0], out o) || o < 1 || o > 3)
-					throw new ArgumentException($"expected integer in range 1-3 (got '{strings[0]}')");
+				if (!int.TryParse(args[0], out o) || o < 1 || o > 3)
+					throw new ArgumentException($"expected integer in range 1-3 (got '{args[0]}')");
 				return o;
 			}, "--verbose", "-v");
 
-			s.AddArgument(strings => string.Join(" ", strings), "--path", "-p");
+			commandLine.AddArgument(args => string.Join(" ", args), "--path", "-p");
 
 			try {
-				if (args.Length > 0)
-					s.Parse(args);
+				if (argv.Length > 0)
+					commandLine.Parse(argv);
 				else
-					s.Parse("Extra","stuff!", "-v", "3", "--path", "C:\\Program", "Files\\");
+					commandLine.Parse("Extra","stuff!", "-v", "3", "--path", "C:\\Program", "Files\\");
 			} catch (CommandLineArgumentException e) {
 				Console.Error.WriteLine($"{e.ParameterName}: {e.Message}");
 				Console.ReadLine();
 				return;
 			}
 
-			Console.WriteLine($"Default:\t['{s.GetValue(string.Empty)}']");
+			Console.WriteLine($"Default:\t['{commandLine.GetValue(string.Empty)}']");
 
-			Console.WriteLine($"Verbose:\t{s.RawParameters.ContainsKey("-v")}/{s.RawParameters.ContainsKey("--verbose")} (Level: {s.GetValue("-v")})");
+			Console.WriteLine($"Verbose:\t{commandLine.RawArguments.ContainsKey("-v")}/{commandLine.RawArguments.ContainsKey("--verbose")} (Level: {commandLine.GetValue("-v")})");
 
-			Console.WriteLine($"   Path:\t'{s.GetValue("--path")}'");
-
+			Console.WriteLine($"   Path:\t'{commandLine.GetValue("--path", Environment.CurrentDirectory)}'");
 			Console.ReadLine();
 		}
 	}
