@@ -25,7 +25,7 @@ namespace SimpleArgv {
 		/// The raw command-line input
 		/// </summary>
 		public IReadOnlyDictionary<string, string[]> RawArguments => _rawArguments;
-
+        
 		#endregion Properties
 
 		#region Constructors
@@ -87,6 +87,8 @@ namespace SimpleArgv {
 		public T GetValue<T>(string argumentName, T defaultValue) {
 			if (!_argNameLookup.ContainsKey(argumentName))
 				return defaultValue;
+            if (!_arguments.ContainsKey(_argNameLookup[argumentName]))
+                return defaultValue;
 			var value = _arguments[_argNameLookup[argumentName]];
 			return value is T ? (T)value : defaultValue;
 		}
