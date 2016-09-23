@@ -139,7 +139,7 @@ namespace SimpleArgv {
 
 		private void ParseArgument(string argName, string[] values) {
 			try {
-				_arguments.Add(argName, _validationFuncs[argName].Invoke(values));
+			    _arguments.Add(argName, _validationFuncs.ContainsKey(argName) ? _validationFuncs[argName].Invoke(values) : values);
 			} catch (Exception e) {
 				throw new ArgumentValidationException(e.Message, string.Join(", ", _aliasLookup[argName]), e);
 			}

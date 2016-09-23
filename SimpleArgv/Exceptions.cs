@@ -7,6 +7,8 @@ namespace SimpleArgv {
 	public abstract class CommandLineArgumentException : Exception {
 		public string ParameterName { get; }
 		protected CommandLineArgumentException(string message, string parameterName, Exception innerException = null) : base(message, innerException) { ParameterName = parameterName; }
+
+	    public override string ToString() => $"Failed to parse parameter {ParameterName}: {Message}";
 	}
 
 	/// <summary>
