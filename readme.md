@@ -1,6 +1,8 @@
 Simple `argv` Parser
 ================
 
+[![Build Status](https://travis-ci.org/Sidneys1/SimpleArgv.svg?branch=test-travis)](https://travis-ci.org/Sidneys1/SimpleArgv)
+
 ## Setup
 
 Reference `SimpleArgv` in your project.
